@@ -1,4 +1,9 @@
-using Alumnisystem.App.Shared.RoleApplication.cs;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Alumnisystem.App.Shared;
 
 namespace Alumnisystem.App.Server.Controllers;
 
@@ -13,9 +18,9 @@ public class RoleApplicationController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{RoleApplicationId}/RoleApplication")]
+    /*[HttpGet("{RoleApplicationId}/RoleApplication")]
     public RoleApplication GetRoleApplicationbyID(int RoleApplicationId)
     {
-        return [RoleApplicationId];
-    }
+        //return [RoleApplicationId];
+    }*/
 }
