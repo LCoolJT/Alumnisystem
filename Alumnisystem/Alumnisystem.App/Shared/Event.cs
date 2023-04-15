@@ -11,4 +11,22 @@ public class Event
     public string? Name { get; set; }
 
     public string? Summary { get; set; }
+
+    public void Update(int? fromNow = null, string? name = null, string? summary = null)
+    {
+        if (!string.IsNullOrEmpty(name))
+        {
+            Name = name;
+        }
+
+        if (!string.IsNullOrEmpty(summary))
+        {
+            Summary = summary;
+        }
+
+        if (fromNow.HasValue)
+        {
+            Date = DateOnly.FromDateTime(DateTime.Now.AddDays((double)fromNow));
+        }
+    }
 }

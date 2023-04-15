@@ -39,40 +39,43 @@ public class EventController : ControllerBase
         });
     }
 
-    [HttpGet(Name = "/GetEvent")]
-    public IEnumerable<Event> Get()
+    [HttpGet("{ID}", Name = "GetEvent")]
+    public Event? GetNth(Guid ID) => Events.FirstOrDefault(e => e.eventID == ID);
+
+    [HttpGet(Name = "GetEvents")]
+    public List<Event> Get() => Events;
+
+    [HttpPost(Name = "AddEvent")]
+    public Event? Add([FromBody] EventRequest eventRequest)
     {
-        return Enumerable.Range(0, Events.Count).Select(index => Events[index])
-        .ToArray();
+        var foundEvent = GetNth(eventRequest.Ev.eventID);
+        if (foundEvent != null)
+            return null;
+
+        Events.Add(eventRequest.Ev);
+        return eventRequest.Ev;
     }
 
-    /*[HttpGet(Name = "/AddEvent")]
-    public void Add(int _fromnow, int _ID, String _Name, String _Summary)
+    [HttpPut(Name = "UpdateEvent")]
+    public Event? Update([FromBody] Guid ID, int? fromNow = null, string? name = null, string? summary = null)
     {
-        for (int i = 0; i <= Events.Count; i++)
-        {
-            if (Events[i].ID == _ID)
-            {
-                return;
-            }
-        }
-        Events.Add(new Event {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(_fromnow)),
-            ID = _ID, 
-            Name = _Name, 
-            Summary = _Summary });
-    }*/
+        var selectedEvent = GetNth(ID);
+        selectedEvent?.Update(fromNow, name, summary);
+        return selectedEvent;
+    }
 
-    /*[HttpGet(Name = "RemEvent")]
-    public void Rem(int _ID)
+    [HttpDelete("{ID}", Name = "DeleteEvent")]
+    public void Delete(Guid ID)
     {
-        for(int i = 0; i <= Events.Count; i++)
-        {
-            if (Events[i].ID == _ID)
-            {
-                Events.RemoveAt(i);
-                return;
-            }
-        }
-    }*/
+        var selectedEvent = GetNth(ID);
+        if (selectedEvent == null)
+            _logger.LogError("Event does not exist in the list of events.");
+        else
+            Events.Remove(selectedEvent);
+    }
+
+    public class EventRequest
+    {
+        public Event Ev { get; set; }
+    }
 }
